@@ -46,6 +46,10 @@ ___________________________________________________________
 
   ![image](https://user-images.githubusercontent.com/98767110/171869174-86981ce9-6c89-4abd-953f-f61c8fc72867.png)
   
+  Página de Perfil  do  usuário
+  
+  ![image](https://user-images.githubusercontent.com/98767110/173612059-57c6ab78-a521-4ade-afc4-dd6d217b546d.png)
+
   
   Página de detalhes do restaurante
   
