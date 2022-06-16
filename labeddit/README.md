@@ -11,7 +11,7 @@ desenvolvido com base no Iphone SE
 
 ## 💻 Link do surge
 
-In the project directory, you can run:
+https://peaceful-flame.surge.sh/
 
 ## 🛠 ferramentas e tecnologias
 
