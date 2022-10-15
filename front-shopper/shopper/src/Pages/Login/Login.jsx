@@ -1,9 +1,13 @@
 import axios from "axios"
 import React from "react"
 import { BASE_URL } from "../Baseurl/Baseurl"
-
+import { Box, ButtonLogin, Container, ContainerInput,  FooterText,  InputLogin, InputPassword, LoginText } from "./styled"
+import mercearia from '../../Img/mercearia.png'
+import { goToFeed, goToSignup } from "../Router/Coordinator"
+import { useNavigate } from "react-router-dom"
 
 export default function Login() {
+    const navigate = useNavigate()
 
     const [email, setEmail] = React.useState( '' )
     const [password, setPassword] = React.useState( '' )
@@ -18,7 +22,10 @@ export default function Login() {
 
         axios.post( `${BASE_URL}/login`, body )
             .then( ( res => {
-                window.localStorage.setItem( 'token', res.data );
+                console.log(res);
+                window.localStorage.setItem( 'token', res.data )
+                goToFeed(navigate)
+                
             } ) ).catch( ( err ) => {
                 console.log( err.message );
             } )
@@ -35,12 +42,34 @@ export default function Login() {
    
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <input type="text" onChange={onChangeEmail} placeholder='email' value={email} />
-                <input type="text" onChange={onChangePassword} placeholder='password' value={password} />
-                <button>Entrar</button>
-            </form>  
-        </div>
+        <Container>
+            <Box>
+                <ContainerInput onSubmit={handleSubmit}>
+    
+                   <img src={mercearia} alt='mercearia'/>
+                    
+                    <LoginText>Entrar</LoginText>
+
+                    <InputLogin 
+                        label="Email"
+                        type="email"
+                        onChange={onChangeEmail}
+                        value={email}
+                    />
+
+                    <InputPassword
+                        label="password"
+                        type="password"
+                        onChange={onChangePassword}
+                        value={password}
+                     />
+
+                    <ButtonLogin>Entrar</ButtonLogin>
+
+                    <FooterText>Ainda não tem conta? <span onClick={() => goToSignup(navigate)}>Criar conta</span></FooterText>
+                    
+                </ContainerInput>  
+            </Box>
+        </Container>
     )
 }
