@@ -53,10 +53,7 @@ export const ButtonLogin = styled.button`
 
         :hover{
             background-color: #e8222e;
-        }
-
-
-        
+        }      
     }
 `
 

@@ -18,3 +18,8 @@ export const goToCart = (navigate) => {
 export const goToDetails = (navigate) => {
     navigate('/details')
 }
+
+export const goToCartWithNoLS = ( navigate ) => {
+    navigate( '/cart' )
+    window.localStorage.removeItem( 'pedido' )
+}
