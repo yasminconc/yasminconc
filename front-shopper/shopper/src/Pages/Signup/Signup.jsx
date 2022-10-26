@@ -1,97 +1,100 @@
-import { Box, Container } from "@mui/system"
-import axios from "axios"
 import React from "react"
+import axios from "axios"
+
 import { BASE_URL } from "../Baseurl/Baseurl"
-import { ButtonSignup, ContainerInput, FooterText, InputLogin, InputName, InputPassword, LoginText } from "./styled"
-import laticinios from '../../Img/laticinios.png'
-import { goToFeed, goToLogin } from "../Router/Coordinator"
+
 import { useNavigate } from "react-router-dom"
+import { goToFeed, goToLogin } from "../Router/Coordinator"
 
-export default function Signup() {
+import { Box, Container } from "@mui/system"
+import { ButtonSignup, ContainerInput, FooterText, InputLogin, InputName, InputPassword, SignupTitle } from "./styled"
 
-    const navigate = useNavigate()
 
-    const [name, setName] = React.useState('')
-    const [email, setEmail] = React.useState('')
-    const [password, setPassword] = React.useState('')
-    const [error, setError] = React.useState(null)
 
-    
+    export default function Signup() {
 
-    const HandleSubmit = (event) => {
-        event.preventDefault()
-        const body = {
-            name,
-            email,
-            password
+        const navigate = useNavigate()
+
+        const [name, setName] = React.useState('')
+        const [email, setEmail] = React.useState('')
+        const [password, setPassword] = React.useState('')
+        const [error, setError] = React.useState(null)
+
+        
+
+        const signup = ( event ) => {
+            event.preventDefault()
+
+            const body = {
+                name,
+                email,
+                password
+            }
+
+            axios.post(`${BASE_URL}/signup`, body) 
+            .then( ( res ) => {
+                window.localStorage.setItem('token', res.data)
+                goToFeed(navigate)
+            } )
+            .catch( ( err ) => {
+                setError(err.response.data);
+            } )
         }
 
-        axios.post(`${BASE_URL}/signup`, body) 
-        .then((res) => {
-            console.log(res);
-            window.localStorage.setItem('token', res.data)
-            goToFeed(navigate)
-        })
-        .catch((err) => {
-            setError(err.response.data);
-        })
-    }
+
+        const onchangeName = ( { target } ) => {
+            setName(target.value)
+        }
+
+        const onchangeEmail = ( { target } ) => {
+            setEmail(target.value)
+        }
+
+        const onchangePassword = ( { target } ) => {
+            setPassword(target.value)
+        }
 
 
-    const onchangeName = ({target}) => {
-        setName(target.value)
-    }
+        return (
+            <Container>
+                <Box>
+                    <ContainerInput onSubmit={signup}>
 
-    const onchangeEmail = ({target}) => {
-        setEmail(target.value)
-    }
+                    <p className="shopper-title">Sho<span>pper</span></p>    
 
-    const onchangePassword = ({target}) => {
-        setPassword(target.value)
-    }
+                    <SignupTitle>Cadastre-se</SignupTitle>
 
-
-    return (
-        <Container>
-            <Box>
-                <ContainerInput onSubmit={HandleSubmit}>
-
-                <img src={laticinios}  alt='laticinio'/>     
-
-                <LoginText>Cadastre-se</LoginText>
-
-                    <InputName
-                        label='Name' 
-                        type="text" 
-                        onChange={onchangeName} 
-                        placeholder='name'
-                        value={name}    
-                    />
-
-                    <InputLogin
-                        label='Email' 
-                        type="email" 
-                        onChange={onchangeEmail}
-                        placeholder='email' 
-                        value={email} 
-                    />
-
-                    <InputPassword
-                        label='Password'  
-                        type="text" 
-                        onChange={onchangePassword} 
-                        placeholder='password' 
-                        value={password}
-                        // helperText={error? <p>{error}</p> : null}
+                        <InputName
+                            label='Name' 
+                            type="text" 
+                            onChange={onchangeName} 
+                            placeholder='name'
+                            value={name}    
                         />
 
-                    <ButtonSignup>Entrar</ButtonSignup>
+                        <InputLogin
+                            label='Email' 
+                            type="email" 
+                            onChange={onchangeEmail}
+                            placeholder='email' 
+                            value={email} 
+                        />
 
-                    <FooterText>Já tem conta?<span onClick={() => goToLogin(navigate)}>Entrar</span></FooterText>
+                        <InputPassword
+                            label='Password'  
+                            type="password" 
+                            onChange={onchangePassword} 
+                            placeholder='password' 
+                            value={password}
+                        />
 
-                </ContainerInput>
-            </Box>
-             
-        </Container>
-    )
-}
+                        <ButtonSignup>Entrar</ButtonSignup>
+
+                        <FooterText>Já tem conta?<span onClick={() => goToLogin(navigate)}>Entrar</span></FooterText>
+
+                    </ContainerInput>
+                </Box>
+
+            </Container>
+        )
+    }
