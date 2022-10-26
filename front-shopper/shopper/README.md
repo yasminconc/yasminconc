@@ -1,70 +1,83 @@
-# Getting Started with Create React App
+# 🛒 Case Shopper
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<h4>Projeto desenvolvido individualmente com base no desafio da shopper,  com o objetivo de desenvolver uma aplicação web full stack de mercado.<h4/>
 
-## Available Scripts
+<br/>  
 
-In the project directory, you can run:
+## 📌 Link do surge
 
-### `npm start`
+https://bored-eyes.surge.sh/
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+<br/>  
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🔰 Requisitos e funcinalidades pedidas
 
-### `npm test`
+* O sistema deve ter um formulário de cadastro de pedidos
+* O sistema deve ter um formulário de cadastro de pedidos
+* O usuário deve entrar com Nome do Cliente, Data de Entrega e uma lista de compras 
+* A lista de compras é composta por um ou mais produtos e a quantidade solicitada para 
+cada um deles.
+* O usuário pode alterar a quantidade de itens já cadastrados ou excluir um item que ele 
+não queira mais. 
+* A cada alteração na lista de compras o sistema deve calcular o valor total do pedido.
+* Todas essas informações devem ser salvas em um banco de dados que você vai modelar.
+* Cada pedido salvo deve debitar a quantidade do produto correspondente de seu estoque.
+* O sistema deve alertar o usuário caso a quantidade solicitada não esteja disponível no 
+estoque.
+* O sistema também deve ter uma função para mostrar o estoque atual exibindo: Nome do 
+produto e a quantidade em estoque.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<br/>  
 
-### `npm run build`
+## 🛠 ferramentas e tecnologias
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* React
+* Axios
+* Styled-components
+* Material-Ui
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<br/>  
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🧿 Funcionalidades extras
 
-### `npm run eject`
+* Login 
+* Cadastro
+* Custom Hooks
+* Lista de compras efetuadas
+* O usuário só poderá adicionar itens ao carrinho se estiver logado.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+<br/>  
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+##  📸 imagens do projeto
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+![image](https://user-images.githubusercontent.com/98767110/198153250-fd100052-c4a7-471f-b233-dfb74e9ce7cf.png)
 
-## Learn More
+#
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+![image](https://user-images.githubusercontent.com/98767110/198153699-48a5c0e6-c715-4228-acd7-8a499bc2fc72.png)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+#
 
-### Code Splitting
+![image](https://user-images.githubusercontent.com/98767110/198153865-7a5234aa-d734-4a0d-a730-4f1fdb64186e.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+#
 
-### Analyzing the Bundle Size
+![image](https://user-images.githubusercontent.com/98767110/198154080-1aa618fa-185c-43bc-a5fc-86e1fe80cd8b.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+#
 
-### Making a Progressive Web App
+![image](https://user-images.githubusercontent.com/98767110/198154419-3fc37996-9cc5-4bdc-9ccb-3a843868e6ea.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+#
 
-### Advanced Configuration
+![image](https://user-images.githubusercontent.com/98767110/198154579-3461a46e-a283-4e3e-8bca-300dfe6c0731.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+#
 
-### Deployment
+![image](https://user-images.githubusercontent.com/98767110/198154774-3358e56b-231a-4f6a-bb4d-71fd5caab131.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
