@@ -1,71 +1,71 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import axios from 'axios'
 
-import { UseProtectedPage } from '../Hooks/UseProtectedPage'
-import { CardButton, Card, TopCard, CardsButton,  Divfoorter, ContainerCart, Order } from './styled'
+import { BASE_URL } from '../Baseurl/Baseurl'
 
+import { UseProtectedPage } from '../Hooks/UseProtectedPage'
+import { UseAuthorization } from '../Hooks/UseAuthorization'
+
+import { CardButton, TopCard, ContainerCart, Order, BottonCard, CardMain, Divfooter } from './styled'
 
 import plus from '../../Img/plus.png'
 import minus from '../../Img/minus.png'
 
-import { BASE_URL } from '../Baseurl/Baseurl'
+
+
 
     export default function Cart() {
 
         UseProtectedPage()
-        const timeoutRef = useRef()
-        
 
-        const item = JSON.parse( window.localStorage.getItem( 'pedido' ) )
+        const timeoutRef = React.useRef()
+        const auth = UseAuthorization()
+
+        
         const [quantity, setQuantity] = React.useState( 0 )
         const [cart, setCart] = React.useState( [] )
+        const [order, setOrder] = React.useState( '' )
+        const [inputData, setInputData] = React.useState( '' )
+        
         const [alert, setAlert] = React.useState( null )
-        const [order, setOrder] = React.useState('')
+        const [ error, setError] = React.useState( null )
+        const [unavailableError, setUnavailableError] = React.useState( null )
+
         
+        const item = JSON.parse( window.localStorage.getItem( 'pedido' ) )
         
-        const refreshPage = () => {
-            window.location.reload()
-        }
+    
 
-
-
-        // add item ao carrinho - endpoint
-
-        const handleSubmit = () => {
-
+        const addItemToCart = () => {
             const body = {
                 quantity,
             }
-            const token = window.localStorage.getItem( 'token' )
-
-            axios.post( `${BASE_URL}/add-products/${item.id}`, body, {
-                headers: {
-                    Authorization: token
-                }
-            } )
+    
+            axios.post( `${BASE_URL}/add-products/${item.id}`, body, auth)
                 .then( ( res ) => {
                     console.log( res.data );
 
                 } ).catch( ( err ) => {
-                    console.log( err.message );
+                     setUnavailableError(err.response.data) ;
+                        console.log(err.response.data);
                 } )
         }
+
 
         // ver todos os itens do carrinho - endpoint
 
         React.useEffect( () => {
-            const token = window.localStorage.getItem( 'token' )
-            axios.get( `${BASE_URL}/my-cart`, {
-                headers: {
-                    Authorization: token
-                }
-            } ).then( ( res ) => {
+
+            axios.get( `${BASE_URL}/my-cart`, auth )
+            .then( ( res ) => {
                 setCart( res.data );
+
             } ).catch( ( err ) => {
                 console.log( err );
             } )
 
-        }, [cart] )
+        }, [auth] )
+
 
 
         React.useEffect( () => {
@@ -77,17 +77,10 @@ import { BASE_URL } from '../Baseurl/Baseurl'
         // removendo os itens do carrinho
         const RemoveItemFromCart = ( product ) => {
 
-            const token = window.localStorage.getItem( 'token' )
-
             if ( product ) {
-                axios.delete( `${BASE_URL}/delete/${product.product_id}`, {
-                    headers: {
-                        Authorization: token
-                    }
-                } )
+                axios.delete( `${BASE_URL}/delete/${product.product_id}`, auth)
                     .then( ( res ) => {
                         console.log( res.data );
-                        refreshPage()
                     } ).catch( ( err ) => {
                         console.log( err.message );
                     } )
@@ -98,55 +91,70 @@ import { BASE_URL } from '../Baseurl/Baseurl'
 
 
         const editCartProduct = ( product ) => {
-
             const body = {
                 quantity
             }
 
-            const token = window.localStorage.getItem( 'token' )
-
             if(product) {
 
-                axios.put( `${BASE_URL}/${product.product_id}/update`, body, {
-                    headers: {
-                        Authorization: token
-                    }
-        
-                }).then((res) => {
+                axios.put( `${BASE_URL}/${product.product_id}/update`, body, auth)
+                .then( ( res ) => {
                     console.log(res.data)
         
-                }).catch((err) => {
+                } ).catch( ( err ) => {
                     console.log(err.response);
-                })
+                } )
         
             }
 
+        }
+
+        const AlertError = ( ) => {
+
+            if(cart.length <= 0){
+                setAlert( 'Adicione um produto' )
+
+            }else{
+                setAlert( 'Pedido finalizado com sucesso' )
+                clearTimeout( timeoutRef.current )
+
+                timeoutRef.current = setTimeout( () => {
+                    setAlert( null )
+                }, 5000 )
             }
+        }
 
         
         const purchase = () => {
-            const token = window.localStorage.getItem( 'token' )
 
-            axios.get(`${BASE_URL}/my-cart/purchase`, {
-                headers: {
-                    Authorization: token
-                }
+            if(inputData){
+                axios.get(`${BASE_URL}/purchase`, auth )
+                .then( ( res ) => {
+                    setOrder(res.data);
+                    AlertError()
+                    
+                } ).catch( ( err ) => {
+                    console.log(err.reponse);
+                } )
 
-            }).then((res) => {
-                setOrder(res.data);
-                AlertError()
-                
+            }else {
+              setError( 'escolha uma data de entrega' )
+            }
 
-            }).catch((err) => {
-                console.log(err.reponse);
-            })
         }
 
-        const getOrder = order && order.map((item) => {
+
+       const onchangeData = ( { target } ) => {
+            setInputData(target.value);      
+       }
+
+       
+        
+        const getOrder = order && order.map( ( item ) => {
                 return (
                     <Order>
-                        <p className='list-name'>{item.name}</p>
-                        <p className='list-price'> R$: {item.price}</p>
+                        <p className='order-name'>{item.name}</p>
+                        <p> R$: {item.price}</p>
                     </Order>
                 )
         })
@@ -156,77 +164,85 @@ import { BASE_URL } from '../Baseurl/Baseurl'
         //calculando total do carrinho
 
         let total = 0
+
         for ( let item of cart ) {
             total += Number( item.price * item.quantity )
         }
 
 
-        const cartRendered = cart && cart.map( ( x, index ) => {
-            return <div className='card-container' key={index}>
+
+        const cartRendered = cart && cart.map( ( product, index ) => {
+            return (
+                 <div key={index}> 
+                    <CardMain>
+                        <p className='card-quantity'>{product.quantity}x</p>
+                        <p className='card-name'>{product.name}</p>
+                        <p className='card-price'>R${product.price}</p> 
+                    </CardMain>
+                    
+                    <CardButton>
+                        <p className='card-edit' onClick={() => editCartProduct(product)}>Editar</p>
+                        <p className='card-button' onClick={() => RemoveItemFromCart( product )}>Remover</p>
+                    </CardButton>
+                </div> 
                 
-                <Card>
-                    <p className='card-quantity'>{x.quantity}x</p>
-                    <p className='card-name'>{x.name}</p>
-                    <p className='card-price'>R${x.price}</p> 
-                </Card>
-                
-                <CardButton>
-                <p className='card-edit' onClick={ () => editCartProduct(x)}>Editar</p>
-                <p className='card-button' onClick={() => RemoveItemFromCart( x )}>Remover</p>
-                </CardButton>
-            
-            </div>
+               )
         } )
-
-
-            const AlertError = (  ) => {
-                setAlert( 'Pedido finalizado com sucesso')
-                clearTimeout( timeoutRef.current )
-                timeoutRef.current = setTimeout( () => {
-                    setAlert( null )
-                }, 5000 )
-            }
 
 
 
         return (
 
-
             <ContainerCart>
-                
+   
                 {item ? <div >
 
                     <TopCard>
                         <p className='unity'>{quantity}x</p>
-                        <p className='name'> {item.name} </p>
+                        <p className='name'> {item.name}</p>
                         <p className='price'> R${item.price}</p>
                     </TopCard>
 
-                    <CardsButton>
-                        <img src={plus} alt='plus' className='plus' onClick={() => setQuantity( quantity + 1 )}/>
-                        <p className='add' onClick={handleSubmit}>Adicionar </p>
-                        <img src={minus} alt='minus' className='minus' onClick={() => setQuantity( quantity - 1 )} />
-                    </CardsButton>
+                    <BottonCard>
+                        <img 
+                            src={plus} 
+                            alt='plus' 
+                            className='plus' 
+                            onClick={() => setQuantity( quantity + 1 )}
+                        />
+
+                        <p className='add' onClick={addItemToCart}>Adicionar</p>
+
+                        <img 
+                            src={minus} 
+                            alt='minus' 
+                            className='minus' 
+                            onClick={() => setQuantity( quantity - 1 )} 
+                        />
+                    </BottonCard>
                     
-                </div> : null}
+                        </div> : null}
 
-                {cartRendered}
+                        {cartRendered}
                 
-                <Divfoorter>
-                    <p className='total'>Total : R$ {total.toFixed( 2 )}</p>
-                    <button onClick={purchase} className='button-footer'>Finalizar</button>
+                    <Divfooter>
+                        { !inputData ? <p className='delivery-date-label'>{error}</p> : null}
 
-                
-                    <p className=' alert-message animeLeft'>{alert}</p>
+                        <input 
+                            className='input-date' 
+                            value={inputData}  
+                            type={'date'} 
+                            onChange={onchangeData} 
+                        />
 
-                    {getOrder}
-                </Divfoorter>
+                        <p className='total'>Total : R$ {total.toFixed( 2 )}</p>
+                        <button onClick={purchase} className='button-footer'>Finalizar</button>
+                        <p className=' alert-message animeLeft'>{alert}</p>
 
-            
+                        {getOrder}
+                    </Divfooter>
 
             </ContainerCart>
-
-
 
         )
     }

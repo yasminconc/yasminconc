@@ -1,74 +1,153 @@
-import axios from "axios";
 import React from "react";
+import axios from "axios";
+
 import { BASE_URL } from "../Baseurl/Baseurl";
+
+import { UseAuthorization } from '../Hooks/UseAuthorization'
 import { useNavigate } from "react-router-dom";
+
 import { goToLogin, goToSignup } from "../Router/Coordinator";
-import { Box, Container, ContainerCart, HeaderFeed } from "./styled";
-import carrinho4 from "../../Img/carrinho4.png";
-import comprar from "../../Img/comprar.png";
 import Cart from "../Cart/Cart";
 
-    export default function Feed() {
-        const navigate = useNavigate();
+import { BoxCartQuantity, BoxImgCart, CardContainer, ContainerCart, HeaderFeed, MainFeed } from "./styled";
 
+import carrinho from "../../Img/carrinho.png";
+import comprar from "../../Img/comprar.png";
+
+
+    
+export default function Feed() {
+    
+        const navigate = useNavigate();
+        const auth = UseAuthorization()
+        const token = window.localStorage.getItem('token')
         const [products, setProducts] = React.useState("");
+        const [active, setActive] = React.useState(false);
+        const [getProfile, setGetProfile] = React.useState("")
+
 
         const cartQuantity = window.localStorage.getItem("cart_quantity");
-        const [active, setActive] = React.useState(false);
 
 
         React.useEffect(() => {
-            axios
-            .get(`${BASE_URL}/products/stock`)
-            .then((res) => {
-                setProducts(res.data);
-            })
-            .catch((err) => {
-                console.log(err.message);
-            });
+            axios.get(`${BASE_URL}/products/stock`)
+                .then( ( res ) => {
+                    setProducts(res.data);
+                } )
+                .catch(( err ) => {
+                    console.log(err.message);
+                } );
         }, []);
 
 
-        const addItem = (id) => {
-            window.localStorage.setItem("pedido", JSON.stringify(id));
-            setActive(true);
+
+        React.useEffect(() => {
+            axios.get(`${BASE_URL}/get-user`, auth)
+                .then((res) => {
+                    setGetProfile(res.data)
+                })
+                .catch((err) => {
+                    console.log(err.message);
+                })
+        },[auth])
+        
+
+        
+
+        const addItem = ( id ) => {
+            const token = window.localStorage.getItem('token')
+            console.log(id);
+            if(!token) {
+                goToLogin(navigate)
+
+            } else if (id.qty_stock === 0){
+                window.alert('produto indisponivel')
+            }
+            else{
+                window.localStorage.setItem("pedido", JSON.stringify(id));
+                setActive(true);
+            }
+        
         };
         
 
         const renderProducts = products && products.map((item, index) => {
             return (
-                <Container key={index}>
+                <CardContainer key={index}>
                     <h2 className="card-qty">{item.qty_stock} unidades</h2>
-                    <img className="card-img" src={comprar} alt="dwsd" />
-                    <h5 className="card-name">{item.name} </h5>
-                    <h4 className="card-price"> R$ {item.price}</h4>
-                    <button className="card-button" onClick={() => addItem(item)}> {" "}  ADD TO CART{" "} </button>
-                </Container>
+                     <img className="card-img" src={comprar} alt="card img" />
+                      <h5 className="card-name">{item.name} </h5>
+                     <h4 className="card-price"> R$ {item.price}</h4>
+                    <button className="card-button" onClick={() => addItem(item)}>  Adicionar </button>
+                </CardContainer>
             )
             })
 
+
+
+        const openCart = () => {
+            const token = window.localStorage.getItem('token')
+
+            if(!token){
+                goToLogin(navigate)
+            }else{
+                setActive(!active)
+            }
+        }
+
+           
+
         return (
             <div>
+
                 <HeaderFeed>
-                    <p className="shopper-text">Sho<strong>pper</strong></p>
-                    <p onClick={() => goToLogin(navigate)} className="login">Fazer login</p>
+                    
+                    { token ? <div className="Logged">
+                        
+                                    <p className="logo-shopper">Sho<span>pper</span></p> 
+                                    <p className="user-name"> Olá <span>{getProfile.name}</span></p>
 
-                    <button onClick={() => goToSignup(navigate)} className="button-header">Criar conta</button>
+                                    <BoxImgCart>
+                                        <img
+                                            onClick={() => openCart()}
+                                            className="carrinho"
+                                            src={carrinho}
+                                            alt="carrinho"
+                                        />
+                                    </BoxImgCart>
 
-                    <img
-                        onClick={() => setActive(!active)}
-                        className="carrinho"
-                        src={carrinho4}
-                        alt="carrinho"
-                    />
+                                    <BoxCartQuantity>
+                                        <p className="Cart-quantity"> {cartQuantity}</p>
+                                    </BoxCartQuantity>
 
-                    <p className="Cart-quantity"> Itens : {cartQuantity}</p>
+                                </div>
+                    :  
+
+                                <div className="logged-out">
+
+                                    <p className="logo-shopper">Sho<span>pper</span></p>
+                                    <p onClick={() => goToLogin(navigate)} className="login">Fazer login</p>
+
+                                    <button onClick={() => goToSignup(navigate)} className="button-header">Criar conta</button> 
+
+                                <BoxImgCart>
+                                    <img
+                                        onClick={() => openCart()}
+                                        className="carrinho"
+                                        src={carrinho}
+                                        alt="carrinho"
+                                    />
+                                </BoxImgCart>
+
+                                </div>
+                    }
+
                 </HeaderFeed>
-
+                
                 <ContainerCart>
-                    <Box className="box">{renderProducts}</Box>
+                    <MainFeed>{renderProducts}</MainFeed>
 
-                    <div className="cart animeLeft">{active ? <Cart /> : null}</div>
+                    <div className="cart">{active ? <Cart /> : null}</div>
                 </ContainerCart>
             </div>
         );
