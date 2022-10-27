@@ -1,6 +1,6 @@
 # 🛒 Case Shopper
 
-<h4>Projeto desenvolvido individualmente seguindo os requesitos pedidos no desafio da shopper. <h4/>
+<h4>Projeto desenvolvido individualmente com base no desafio da shopper, com o objetivo de desenvolver uma aplicação web full stack de mercado. <h4/>
   
  
  <br/>
@@ -49,5 +49,11 @@ produto e a quantidade em estoque.
 * Bcryptjs  
 * Lista de compras efetuadas
 * O usuário só poderá adicionar itens ao carrinho se estiver logado.  
+
+ <br/>
+  
+## ♦ Link do front-end
+  
+ https://github.com/yasminconc/yasminconc/blob/main/front-shopper/shopper/README.md
   
   
