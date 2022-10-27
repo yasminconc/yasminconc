@@ -77,7 +77,11 @@ produto e a quantidade em estoque.
 
 ![image](https://user-images.githubusercontent.com/98767110/198154774-3358e56b-231a-4f6a-bb4d-71fd5caab131.png)
 
+<br/> 
 
+## 🔷 Link do back-end
+
+https://github.com/yasminconc/yasminconc/tree/main/back-shopper2
 
 
 
