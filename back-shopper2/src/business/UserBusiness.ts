@@ -13,6 +13,7 @@ export class UserBusiness {
         private hashManager: HashManager,
         private tokenManager: TokenManager
     ){}
+    
 
     signup = async (name: string, email: string, password:string) => {
         try {
@@ -101,6 +102,7 @@ export class UserBusiness {
             throw new CustomError(404, error.message)
         }
     }
+    
 
     getUser = async (token: string) => {
         try {
@@ -114,7 +116,7 @@ export class UserBusiness {
 
             return response
 
-            
+ 
         } catch (error:any) {
             throw new CustomError(404, error.message)
         }

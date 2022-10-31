@@ -5,7 +5,7 @@ import { PurchaseBusiness } from "../business/PurchaseBusiness"
 export class PurchaseController {
     constructor (
         private purchaseBusiness: PurchaseBusiness
-    ) {}
+    ){}
 
 
     purchase = async (req: Request, res: Response) => {

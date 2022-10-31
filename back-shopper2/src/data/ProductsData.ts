@@ -18,6 +18,7 @@ export class ProductsData extends BaseDatabase {
         }
     }
 
+
     getProductById = async (id: string) => {
         try {
            const response = await this.connection(this.table)
@@ -29,6 +30,7 @@ export class ProductsData extends BaseDatabase {
             throw new CustomError(404,error.message)
         }
     }
+    
 
     realodStock = async () => {
         try {

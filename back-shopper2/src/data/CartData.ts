@@ -15,15 +15,15 @@ export class CartData extends BaseDatabase {
                 product_id: cart.getProductId(),
                 name: cart.getName(),
                 price: cart.getPrice(),
-                quantity: cart.getQuantity()
+                quantity: cart.getQuantity(),
+                date: cart.getDate()
             })
-            
-            console.log(response);
 
         } catch (error:any) {
             throw new CustomError(404,error.message);
         }
     }
+
 
     getProductById = async (id: string) => {
         try {
@@ -50,6 +50,7 @@ export class CartData extends BaseDatabase {
             throw new CustomError(404,error.message);
         }
     }
+    
 
     getCart = async (id: string) => {
         try {
@@ -63,6 +64,7 @@ export class CartData extends BaseDatabase {
         }
     }
 
+
     deleteProduct = async (productId: string, userId: string) => {
         try {
              await this.connection(this.tableName)
@@ -74,6 +76,7 @@ export class CartData extends BaseDatabase {
             throw new CustomError(404,error.message);
         }
     }
+    
 
     editQuantity = async (userId: string, productId: string, qty: number) => {
         try {
@@ -87,6 +90,7 @@ export class CartData extends BaseDatabase {
         }
     }
 
+
     verifyCart = async (userId: string, productId: string) => {
             try {
                 const response = await this.connection(this.tableName)
@@ -98,5 +102,20 @@ export class CartData extends BaseDatabase {
             } catch (error:any) {
                 throw new CustomError(404,error.message);
             }
+    }
+
+
+    cartTotal = async(userId: string) => {
+        try {
+            const response = await this.connection.raw (
+                `SELECT SUM (price * quantity) as Total from ${this.tableName}
+                 WHERE user_id = "${userId}"`
+            )
+
+            return response[0]
+
+        } catch (error:any) {
+            throw new CustomError(404,error.message);
         }
+    }
 }

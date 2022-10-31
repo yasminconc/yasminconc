@@ -1,11 +1,11 @@
 import express, { Express } from "express";
-import dotenv from "dotenv";
-import { AddressInfo } from "net";
-import { userRouter } from "./router/UserRouter";
-import { productsRouter } from "./router/ProductsRouter";
-import { cartRouter } from "./router/CartRouter";
-import cors from "cors"
 import { purchaseRouter } from "./router/PurchaseRouter";
+import { productsRouter } from "./router/ProductsRouter";
+import { userRouter } from "./router/UserRouter";
+import { cartRouter } from "./router/CartRouter";
+import { AddressInfo } from "net";
+import dotenv from "dotenv";
+import cors from "cors"
  
 dotenv.config();
 
@@ -24,6 +24,7 @@ const server = app.listen(process.env.PORT || 3003, () => {
     }
 
 })
+
 
 app.use(userRouter)
 app.use(productsRouter)

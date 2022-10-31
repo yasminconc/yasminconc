@@ -1,12 +1,12 @@
 
-
 export class Cart {
     constructor(
         private userId: string,
         private productId: string,
         private name: string,
         private price: string,
-        private quantity: number
+        private quantity: number,
+        private date: number
     ){}
 
     getUserId ():string {
@@ -27,6 +27,9 @@ export class Cart {
 
     getQuantity ():number {
         return this.quantity
+    }
+    getDate ():number {
+        return this.date
     }
 
 
