@@ -8,14 +8,11 @@ export default function Router() {
     return (
         <BrowserRouter>
             <Routes>
-
                 <Route index element={<Feed />} />
 
                 <Route path="/login" element={<Login />} />
 
                 <Route path="/signup" element={<Signup />} />
-
-               
             </Routes>
         </BrowserRouter>
     )
