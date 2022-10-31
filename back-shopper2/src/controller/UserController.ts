@@ -1,10 +1,12 @@
 import { Request, Response } from "express"
 import { UserBusiness } from "../business/UserBusiness"
 
+
 export class UserController {
     constructor(
         private userBusiness: UserBusiness
     ){}
+
 
     signup = async (req: Request, res: Response) => {
         try {
@@ -18,6 +20,7 @@ export class UserController {
             res.status(404).send(error.sqlMessage || error.message)
         }
     }
+
 
     login = async (req: Request, res: Response) => {
         try {
@@ -34,6 +37,7 @@ export class UserController {
         }
     
     }
+    
 
     getUser = async (req: Request, res: Response) => {
         try {

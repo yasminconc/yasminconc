@@ -20,23 +20,26 @@ create table Cart_shopper (
     name VARCHAR(255) NOT NULL,
     price FLOAT NOT NULL,
     quantity INT NOT NULL,
+    date BIGINT NOT NULL,
     Foreign Key (user_id) REFERENCES User_shopper(id),
     Foreign Key (product_id) REFERENCES Products_shopper(id)
 );
+
 
 
  UPDATE Products_shopper as product
  INNER JOIN Cart_shopper as cart
  SET qty_stock = product.qty_stock - cart.quantity
  WHERE cart.product_id = product.id
- AND cart.user_id = "${id}"
-
-
-create table 
+ AND cart.user_id = "${id}";
 
 
 DROP TABLE `Cart_shopper`;
 DROP TABLE `Products_shopper`;
+
+SELECT SUM (price * quantity) as Total from `Cart_shopper`;
+
+SELECT * FROM `Cart_shopper`;
 
 INSERT INTO Products_shopper(id, name, price, qty_stock)
 VALUES(16,"AZEITE  PORTUGUÊS EXTRA VIRGEM GALLO 500ML",20.49,158);

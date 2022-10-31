@@ -3,8 +3,8 @@ import { BaseDatabase } from "./BaseDatabase";
 
 
 export class PurchaseData extends BaseDatabase {
-    private tableName =  "Cart_shopper"
 
+    private tableName =  "Cart_shopper"
 
     purchase = async (id:string) => {
         try { 

@@ -15,7 +15,8 @@ export const cartBusiness: CartBusiness = new CartBusiness(
 
 const cartController: CartController = new CartController(cartBusiness)
 
-cartRouter.post('/add-products/:productId', cartController.addProduct)
 cartRouter.get('/my-cart', cartController.getCart )
-cartRouter.delete('/delete/:productId', cartController.deleteProduct)
+cartRouter.get("/total-cart", cartController.cartTotal)
 cartRouter.put("/:productId/update", cartController.editQuantity)
+cartRouter.delete('/delete/:productId', cartController.deleteProduct)
+cartRouter.post('/add-products/:productId', cartController.addProduct)

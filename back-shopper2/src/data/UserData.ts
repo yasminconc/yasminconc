@@ -7,7 +7,6 @@ export class UserData extends BaseDatabase {
     private tableName = ' User_shopper '
 
     signup = async (user: User) => {
-
         try {
             await this.connection(this.tableName)
             .insert({
@@ -24,8 +23,8 @@ export class UserData extends BaseDatabase {
         }
     }
 
-    getUserByEmail = async (email: string) => {
 
+    getUserByEmail = async (email: string) => {
         try {
             const reponse = await this.connection(this.tableName)
             .where({email: email})
@@ -37,6 +36,7 @@ export class UserData extends BaseDatabase {
         }
 
     }
+    
 
     getUser = async (id: string) => {
         try {

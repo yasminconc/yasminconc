@@ -1,4 +1,3 @@
-import { ProductsData } from "../data/ProductsData"
 import { PurchaseData } from "../data/PurchaseData"
 import { CustomError } from "../models/CustomError"
 import { TokenManager } from "../services/TokenManager"
@@ -6,8 +5,8 @@ import { TokenManager } from "../services/TokenManager"
 
 export class PurchaseBusiness {
    constructor (
-    private purchaseData: PurchaseData,
-    private tokenManager: TokenManager
+        private purchaseData: PurchaseData,
+        private tokenManager: TokenManager
    ){}
     
 
@@ -22,7 +21,7 @@ export class PurchaseBusiness {
             const response = await this.purchaseData.purchase(user.id)
 
             return response
-            
+    
         } catch (error:any) {
             throw new CustomError(404, error.message)
         }

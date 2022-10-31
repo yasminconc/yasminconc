@@ -7,6 +7,7 @@ export class ProductsBusiness {
         private productsData:ProductsData
     ){}
 
+
     getStock = async () => {
         try {
           const response = await this.productsData.getStock()
@@ -19,6 +20,7 @@ export class ProductsBusiness {
 
     }
 
+    
     realodStock = async () => {
         try {
             await this.productsData.realodStock()

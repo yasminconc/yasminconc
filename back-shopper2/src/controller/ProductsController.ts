@@ -3,10 +3,10 @@ import { ProductsBusiness } from "../business/ProductsBusiness";
 
 
 export class ProductsController {
-
     constructor(
         private productsBusiness: ProductsBusiness
     ){}
+
 
     getStock = async (req:Request, res: Response) => {
         try {
@@ -18,6 +18,7 @@ export class ProductsController {
             res.status(404).send(error.sqlMessage || error.message)
         }
     }
+    
 
     reloadStock = async (req:Request, res: Response) => {
         try {

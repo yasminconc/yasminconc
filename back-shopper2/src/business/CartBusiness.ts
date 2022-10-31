@@ -12,7 +12,7 @@ export class CartBusiness {
         private productsData: ProductsData
     ){}
 
-    addProduct = async (token: string, productId: string, quantity: number) => {
+    addProduct = async (token: string, productId: string, quantity: number, date: string) => {
         try {
             if(!token){
                 throw new CustomError(401,'Login first');    
@@ -35,17 +35,18 @@ export class CartBusiness {
                 throw new CustomError(400,'Quantity unavailable');  
             }
 
-            const verifyCart = await this.cartData.getProductById(productId)
+            const verifyCart = await this.cartData.getProductById(productId) 
 
-            if(verifyCart){
+            if(verifyCart){ 
              const response = await this.cartData.updateQuantity(productId, quantity)
 
              return response
 
             }
 
-
             const user = this.tokenManager.getTokenData(token)
+
+            const deliveryDate = new Date(date).getTime()
 
 
             await this.cartData.addProduct(
@@ -54,10 +55,11 @@ export class CartBusiness {
                     productId,
                     product.name,
                     product.price,
-                    quantity
+                    quantity,
+                    deliveryDate
                 )
             )
-            
+
         } catch (error:any) {
             throw new CustomError(404, error.message)
         }
@@ -75,7 +77,7 @@ export class CartBusiness {
             const response =  await this.cartData.getCart(user.id)
 
             return response
-            
+       
         } catch (error:any) {
             throw new CustomError(404, error.message)
         }
@@ -95,8 +97,7 @@ export class CartBusiness {
             const user = this.tokenManager.getTokenData(token)
 
             await this.cartData.deleteProduct(productId, user.id)
-            
-            
+                
         } catch (error:any) {
             throw new CustomError(404, error.message)
         }
@@ -108,17 +109,18 @@ export class CartBusiness {
             if(!token) {
                 throw new CustomError(401, "Login first")
             }
+
             if(!productId) {
                 throw new CustomError(400, "Product not found")
             }
+            
             if(!quantity) {
                 throw new CustomError(400, "Insert a quantity")
             }
 
             const user = this.tokenManager.getTokenData(token)
             const verifyCart = await this.cartData.verifyCart(user.id, productId)
-
-            console.log(verifyCart)
+            
 
             if(!verifyCart) {
                 throw new CustomError(400, "Product not found in your cart")
@@ -126,6 +128,28 @@ export class CartBusiness {
 
             await this.cartData.editQuantity(user.id, productId, quantity)
             
+        } catch (error:any) {
+            throw new CustomError(404, error.message)
+        }
+    }
+
+    
+    cartTotal = async (token: string) => {
+        try {
+            if(!token) {
+                throw new CustomError(401, "Login first")
+            }
+
+            const user = this.tokenManager.getTokenData(token)
+
+            if(!user) {
+                throw new CustomError(404, "User fatal error")
+            }
+
+            const response = await this.cartData.cartTotal(user.id)
+
+            return response
+
         } catch (error:any) {
             throw new CustomError(404, error.message)
         }

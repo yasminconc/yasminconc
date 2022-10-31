@@ -1,6 +1,6 @@
-
 import { Request, Response } from 'express'
 import {CartBusiness} from '../business/CartBusiness'
+
 
 export class CartController {
     constructor(
@@ -12,9 +12,9 @@ export class CartController {
         try {
             const token = req.headers.authorization as string
             const {productId} = req.params
-            const {quantity} = req.body
+            const {quantity, date} = req.body
 
-            const response = await this.cartBusiness.addProduct(token, productId, quantity) 
+            const response = await this.cartBusiness.addProduct(token, productId, quantity, date) 
 
             res.send('Product added successfully')
             
@@ -52,6 +52,7 @@ export class CartController {
         }
     }
 
+
     editQuantity = async (req: Request, res: Response) => {
         try {
             const token = req.headers.authorization as string
@@ -60,7 +61,21 @@ export class CartController {
 
             const response = await this.cartBusiness.editQuantity(token, productId, quantity)
 
-            res.send("Product updated")
+            res.send('Product updated')
+            
+        } catch (error:any) {
+            res.status(404).send(error.sqlMessage || error.message)
+        }
+    }
+    
+
+    cartTotal = async (req: Request, res: Response) => {
+        try {
+            const token = req.headers.authorization as string
+            const response = await this.cartBusiness.cartTotal(token)
+
+            res.status(200).send(response)
+            
         } catch (error:any) {
             res.status(404).send(error.sqlMessage || error.message)
         }
