@@ -15,8 +15,7 @@ import { useNavigate } from "react-router-dom"
 
         const [email, setEmail] = React.useState( '' )
         const [password, setPassword] = React.useState( '' )
-
-
+        
 
         const login = ( event ) => {
             event.preventDefault()
@@ -37,7 +36,6 @@ import { useNavigate } from "react-router-dom"
         }
 
 
-
         const onChangeEmail = ( { target } ) => {
             setEmail( target.value );
         }
@@ -52,7 +50,7 @@ import { useNavigate } from "react-router-dom"
             <Container>
                 <Box>
                     <ContainerInput onSubmit={login}>
-        
+
                         <p className="shopper-title">Sho<strong>pper</strong></p>
                         
                         <LoginTitle>Entrar</LoginTitle>

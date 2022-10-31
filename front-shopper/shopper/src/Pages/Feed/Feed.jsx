@@ -18,30 +18,30 @@ import comprar from "../../Img/comprar.png";
     
 export default function Feed() {
     
-        const navigate = useNavigate();
+        const navigate = useNavigate()
         const auth = UseAuthorization()
-        const token = window.localStorage.getItem('token')
-        const [products, setProducts] = React.useState("");
-        const [active, setActive] = React.useState(false);
-        const [getProfile, setGetProfile] = React.useState("")
+        const token = window.localStorage.getItem('token') 
 
+        const [products, setProducts] = React.useState('')
+        const [getProfile, setGetProfile] = React.useState('') 
+        const [openModelCartButton, setOpenModelCartButton] = React.useState(false)
 
-        const cartQuantity = window.localStorage.getItem("cart_quantity");
+    
+        const cartQuantity = window.localStorage.getItem("cart_quantity")
 
-
-        React.useEffect(() => {
+        React.useEffect( ( ) => {
             axios.get(`${BASE_URL}/products/stock`)
                 .then( ( res ) => {
                     setProducts(res.data);
                 } )
                 .catch(( err ) => {
                     console.log(err.message);
-                } );
-        }, []);
+                } )
+        }, [])
 
 
 
-        React.useEffect(() => {
+        React.useEffect( ( ) => {
             axios.get(`${BASE_URL}/get-user`, auth)
                 .then((res) => {
                     setGetProfile(res.data)
@@ -49,26 +49,27 @@ export default function Feed() {
                 .catch((err) => {
                     console.log(err.message);
                 })
+
         },[auth])
         
 
         
+        const addItem = ( item ) => {
 
-        const addItem = ( id ) => {
-            const token = window.localStorage.getItem('token')
-            console.log(id);
+            const token = window.localStorage.getItem('token') 
             if(!token) {
                 goToLogin(navigate)
 
-            } else if (id.qty_stock === 0){
+            } else if (item.qty_stock === 0){
                 window.alert('produto indisponivel')
-            }
-            else{
-                window.localStorage.setItem("pedido", JSON.stringify(id));
-                setActive(true);
-            }
+
+            } else {
+                window.localStorage.setItem("pedido", JSON.stringify(item))
+                setOpenModelCartButton(true) 
+            }    
         
-        };
+        }
+
         
 
         const renderProducts = products && products.map((item, index) => {
@@ -80,36 +81,36 @@ export default function Feed() {
                      <h4 className="card-price"> R$ {item.price}</h4>
                     <button className="card-button" onClick={() => addItem(item)}>  Adicionar </button>
                 </CardContainer>
-            )
+             )
             })
 
 
+        
+        const openCartFromHeader = () => {
 
-        const openCart = () => {
             const token = window.localStorage.getItem('token')
-
             if(!token){
                 goToLogin(navigate)
+
             }else{
-                setActive(!active)
+                setOpenModelCartButton(!openModelCartButton)  
             }
+
         }
 
            
 
         return (
             <div>
-
                 <HeaderFeed>
-                    
-                    { token ? <div className="Logged">
+                    { token ? <div className="Logged"> 
                         
                                     <p className="logo-shopper">Sho<span>pper</span></p> 
                                     <p className="user-name"> Olá <span>{getProfile.name}</span></p>
 
                                     <BoxImgCart>
                                         <img
-                                            onClick={() => openCart()}
+                                            onClick={() => openCartFromHeader()}
                                             className="carrinho"
                                             src={carrinho}
                                             alt="carrinho"
@@ -122,7 +123,7 @@ export default function Feed() {
 
                                 </div>
                     :  
-
+                              
                                 <div className="logged-out">
 
                                     <p className="logo-shopper">Sho<span>pper</span></p>
@@ -132,7 +133,7 @@ export default function Feed() {
 
                                 <BoxImgCart>
                                     <img
-                                        onClick={() => openCart()}
+                                        onClick={() => openCartFromHeader()}
                                         className="carrinho"
                                         src={carrinho}
                                         alt="carrinho"
@@ -146,8 +147,7 @@ export default function Feed() {
                 
                 <ContainerCart>
                     <MainFeed>{renderProducts}</MainFeed>
-
-                    <div className="cart">{active ? <Cart /> : null}</div>
+                    <div className="cart">{openModelCartButton ? <Cart /> : null}</div>
                 </ContainerCart>
             </div>
         );

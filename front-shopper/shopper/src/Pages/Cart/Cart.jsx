@@ -12,59 +12,66 @@ import plus from '../../Img/plus.png'
 import minus from '../../Img/minus.png'
 
 
-
-
+    
     export default function Cart() {
+        
+        UseProtectedPage()  
 
-        UseProtectedPage()
-
-        const timeoutRef = React.useRef()
+        const timeoutRef = React.useRef() 
         const auth = UseAuthorization()
 
-        
-        const [quantity, setQuantity] = React.useState( 0 )
-        const [cart, setCart] = React.useState( [] )
-        const [order, setOrder] = React.useState( '' )
-        const [inputData, setInputData] = React.useState( '' )
-        
-        const [alert, setAlert] = React.useState( null )
-        const [ error, setError] = React.useState( null )
-        const [unavailableError, setUnavailableError] = React.useState( null )
+        const date = new Date(Date.now()).getTime() 
 
-        
+        const [quantity, setQuantity] = React.useState( 0 ) 
+        const [total, setTotal] = React.useState() 
+        const [cart, setCart] = React.useState( [] )    
+        const [dateValue, setDateValue] = React.useState( '' )     
+        const [order, setOrder] = React.useState( '' ) 
+
+        const [alertEmptyCart, setAlertEmptyCart] = React.useState( null ) 
+        const [errorEmptyData, setErrorEmptyData] = React.useState( null ) 
+
+
         const item = JSON.parse( window.localStorage.getItem( 'pedido' ) )
         
     
-
         const addItemToCart = () => {
-            const body = {
-                quantity,
+            let body 
+
+            if(!dateValue){
+                body = {
+                    quantity,
+                    date
+                }
+
+            }else { 
+                body = {
+                    quantity,
+                    date: dateValue 
+                }
             }
-    
-            axios.post( `${BASE_URL}/add-products/${item.id}`, body, auth)
+                                   
+            axios.post( `${BASE_URL}/add-products/${item.id}`, body, auth)  
                 .then( ( res ) => {
                     console.log( res.data );
 
                 } ).catch( ( err ) => {
-                     setUnavailableError(err.response.data) ;
-                        console.log(err.response.data);
+                    console.log(err.response.data);
                 } )
         }
 
 
-        // ver todos os itens do carrinho - endpoint
 
         React.useEffect( () => {
-
             axios.get( `${BASE_URL}/my-cart`, auth )
             .then( ( res ) => {
-                setCart( res.data );
+                setCart( res.data )  
 
             } ).catch( ( err ) => {
-                console.log( err );
+                console.log( err )
             } )
 
-        }, [auth] )
+        }, [auth] ) 
 
 
 
@@ -74,60 +81,56 @@ import minus from '../../Img/minus.png'
 
         
 
-        // removendo os itens do carrinho
         const RemoveItemFromCart = ( product ) => {
+            axios.delete( `${BASE_URL}/delete/${product.product_id}`, auth)
+            .then( ( res ) => {
+                console.log( res.data );
 
-            if ( product ) {
-                axios.delete( `${BASE_URL}/delete/${product.product_id}`, auth)
-                    .then( ( res ) => {
-                        console.log( res.data );
-                    } ).catch( ( err ) => {
-                        console.log( err.message );
-                    } )
-            }
-
+            } ).catch( ( err ) => {
+                console.log( err.message );
+            } )
         }
 
 
-
+        
         const editCartProduct = ( product ) => {
             const body = {
                 quantity
             }
-
-            if(product) {
-
-                axios.put( `${BASE_URL}/${product.product_id}/update`, body, auth)
-                .then( ( res ) => {
-                    console.log(res.data)
+          
+            axios.put( `${BASE_URL}/${product.product_id}/update`, body, auth)
+            .then( ( res ) => {
+                console.log(res.data)
         
-                } ).catch( ( err ) => {
-                    console.log(err.response);
-                } )
+            } ).catch( ( err ) => {
+                console.log(err.response);
+            } )
         
-            }
 
         }
+
+
 
         const AlertError = ( ) => {
 
             if(cart.length <= 0){
-                setAlert( 'Adicione um produto' )
+                setAlertEmptyCart( 'Adicione um produto' )
 
             }else{
-                setAlert( 'Pedido finalizado com sucesso' )
+                setAlertEmptyCart( 'Pedido finalizado com sucesso' )
                 clearTimeout( timeoutRef.current )
 
                 timeoutRef.current = setTimeout( () => {
-                    setAlert( null )
+                    setAlertEmptyCart( null )
                 }, 5000 )
             }
         }
 
-        
-        const purchase = () => {
 
-            if(inputData){
+        
+        const purchase = ( ) => {
+
+            if(dateValue){
                 axios.get(`${BASE_URL}/purchase`, auth )
                 .then( ( res ) => {
                     setOrder(res.data);
@@ -138,36 +141,42 @@ import minus from '../../Img/minus.png'
                 } )
 
             }else {
-              setError( 'escolha uma data de entrega' )
+                setErrorEmptyData( 'escolha uma data de entrega' )
             }
 
         }
+       
+        
+        React.useEffect( ( ) => {
+        
+            axios.get(`${BASE_URL}/my-cart-value`, auth)
+            .then( ( res ) => {
+                let valorTotal = res.data[0].Total 
+                setTotal(valorTotal.toFixed(2))
+                
+            } ).catch( ( err ) => {
+                console.log(err.reponse);
+            } )
+        
+        },[auth])
+
 
 
        const onchangeData = ( { target } ) => {
-            setInputData(target.value);      
+            setDateValue(target.value); 
+
        }
 
        
         
-        const getOrder = order && order.map( ( item ) => {
+        const getOrder = order && order.map( ( item, index ) => {
                 return (
-                    <Order>
+                    <Order key={index}>
                         <p className='order-name'>{item.name}</p>
                         <p> R$: {item.price}</p>
                     </Order>
                 )
         })
-
-
-
-        //calculando total do carrinho
-
-        let total = 0
-
-        for ( let item of cart ) {
-            total += Number( item.price * item.quantity )
-        }
 
 
 
@@ -184,7 +193,7 @@ import minus from '../../Img/minus.png'
                         <p className='card-edit' onClick={() => editCartProduct(product)}>Editar</p>
                         <p className='card-button' onClick={() => RemoveItemFromCart( product )}>Remover</p>
                     </CardButton>
-                </div> 
+                 </div> 
                 
                )
         } )
@@ -226,18 +235,18 @@ import minus from '../../Img/minus.png'
                         {cartRendered}
                 
                     <Divfooter>
-                        { !inputData ? <p className='delivery-date-label'>{error}</p> : null}
+                        { !dateValue ? <p className='delivery-date-label'>{errorEmptyData}</p> : null}
 
                         <input 
                             className='input-date' 
-                            value={inputData}  
+                            value={dateValue}  
                             type={'date'} 
                             onChange={onchangeData} 
                         />
 
-                        <p className='total'>Total : R$ {total.toFixed( 2 )}</p>
+                        { total ?  <p className='total'>Total : R$ {total}</p> : null}
                         <button onClick={purchase} className='button-footer'>Finalizar</button>
-                        <p className=' alert-message animeLeft'>{alert}</p>
+                        <p className=' alert-message animeLeft'>{alertEmptyCart}</p>
 
                         {getOrder}
                     </Divfooter>
