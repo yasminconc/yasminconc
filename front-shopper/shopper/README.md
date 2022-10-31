@@ -6,7 +6,7 @@
 
 ## 📌 Link do surge
 
-https://bored-eyes.surge.sh/
+https://finicky-plane.surge.sh/
 
 <br/>  
 
