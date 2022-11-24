@@ -137,7 +137,7 @@ import minus from '../../Img/minus.png'
                     AlertError()
                     
                 } ).catch( ( err ) => {
-                    console.log(err.reponse);
+                    console.log(err.response);
                 } )
 
             }else {
@@ -149,13 +149,13 @@ import minus from '../../Img/minus.png'
         
         React.useEffect( ( ) => {
         
-            axios.get(`${BASE_URL}/my-cart-value`, auth)
+            axios.get(`${BASE_URL}/total-cart`, auth)
             .then( ( res ) => {
                 let valorTotal = res.data[0].Total 
                 setTotal(valorTotal.toFixed(2))
                 
             } ).catch( ( err ) => {
-                console.log(err.reponse);
+                console.log(err.response);
             } )
         
         },[auth])
